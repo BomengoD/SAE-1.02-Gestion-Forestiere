@@ -13,7 +13,7 @@ Soit CINQ/SIX fonctions minimum
 */
 
 typedef struct{
-    char identifiant[], espece[];
+    char identifiant[5], espece[20];
     int age, sante;
     float hauteur, diametre, volume;
 }ARBRE;
