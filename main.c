@@ -12,6 +12,7 @@ Soit CINQ/SIX fonctions minimum
 
 */
 
+/*Déclaration du type de données utilisé pour l'enregistrment des arbes : structure d'enregistrement*/
 typedef struct{
     char identifiant[5], espece[20];
     int age, sante;
