@@ -18,3 +18,22 @@ typedef struct{
     int age, sante;
     float hauteur, diametre, volume;
 }ARBRE;
+
+
+/*Prototype de la fonction d'ouverture*/
+void ouverture(char nomfichier[20], char mode[3]){
+    FILE *fic;
+    fic = fopen(nomfichier, mode);
+    if(fic == NULL){
+        printf("Erreur d'ouverture du fichier %s\n", nomfichier);
+        exit(EXIT_FAILURE);
+    }
+    fclose(fic);
+}
+
+void affiche(char nomfichier[20], int nblignes){
+    char ligne[nblignes];
+
+    while( fgets(ligne, nblignes, ))
+    
+}
