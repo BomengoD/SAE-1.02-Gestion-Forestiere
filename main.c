@@ -111,7 +111,7 @@ void affiche_tableau(ARBRE *tab_arbres, int nb_arbres){
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
 
     for (i = 0; i < nb_arbres; i++){
-        printf("| %-6s | %-20s | %-3d | %-7.2f| %-8.2f| %-7.2f  | %-d       |\n", 
+        printf("| %-6s | %-20s | %-3d | %-7.2f| %-8.2f| %-7.2f  | %-d       |\n", // les - servent à aligner à gauche
         tab_arbres[i].identifiant,
         tab_arbres[i].espece,
         tab_arbres[i].age,
