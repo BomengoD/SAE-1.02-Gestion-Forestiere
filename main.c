@@ -154,7 +154,7 @@ void recherche(ARBRE *tab_arbres, int nbr, const char *espece){
 int main(){
 
     const char *nom_fichier = "foret_arbres_50_V1.csv";
-    int nb_arbres = 0, stop = 1;
+    int nb_arbres = 0, stop = 1, saisie_arbres;
     ARBRE *tab_arbres = NULL;
     char reponse[20] = "", cherche_espece[20] = "", demarrage[20]="";
 
@@ -168,8 +168,12 @@ int main(){
 
         while (stop){
             printf("\nQue voulez vous faire ?(Saisir/Rechercher/Trier/Rien) :");
-            scanf("%s",demarrage);
+            scanf("%10s",demarrage);
             if (strcmp(demarrage, "Saisir") == 0){
+                printf("\nCombien d'arbres souhaitez-vous saisir ? :");
+                scanf("%d", &saisie_arbres);
+
+                printf("\n Les arbres ont bien été rajoutés.");
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
