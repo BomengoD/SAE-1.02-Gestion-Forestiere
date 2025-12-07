@@ -153,17 +153,19 @@ void recherche(ARBRE *tab_arbres, int nbr, const char *espece){
 
 
 void tri(ARBRE *tab_arbres, int nbr){
-    int posMin = 0;
-    char choix[10] = "";
-    ARBRE tmp;
-    ARBRE *tab_res = malloc(nbr * sizeof(ARBRE));
+    int posMin = 0; // initialisation de la variable position minimum pour le tri par sélection par l'age
+    char choix[10] = ""; // initialisation de la chaine de caractère choix (qui sera plus tard soit age soit sante)
+    ARBRE tmp; // initialisation de tmp qui sera de type ARBRE
+    ARBRE *tab_res = malloc(nbr * sizeof(ARBRE)); // initialisation de tab_res avec le nombre de cases du tableau * la taille d'une variable de type arbre
 
     for(int i = 0; i < nbr; i++){
-        tab_res[i] = tab_arbres[i];
+        tab_res[i] = tab_arbres[i]; // copie tab_arbres dans tab_res pour garder tab_arbres en original
     }
+    
     printf("Voulez-vous trier par age ou par sante (age/sante) :\n");
-    scanf("%s", choix);
-    if (strcmp(choix, "age") == 0){
+    scanf("%s", choix); 
+    
+    if (strcmp(choix, "age") == 0){ // tri par selection si on choisit age
         for(int i = 0; i < nbr - 2; i++){
             posMin = i;
             for(int j = i + 1; j < nbr; j++){
@@ -172,7 +174,7 @@ void tri(ARBRE *tab_arbres, int nbr){
                 }
             }
             tmp = tab_res[i];
-            tab_res[i] = tab_res[posMin];
+            tab_res[i] = tab_res[posMin]; // Ces 3 lignes corresondent à l'échange 
             tab_res[posMin] = tmp;
 
         }
@@ -181,7 +183,7 @@ void tri(ARBRE *tab_arbres, int nbr){
 
     }
 
-    else if (strcmp(choix, "sante") == 0){
+    else if (strcmp(choix, "sante") == 0){ // tri par insertion si on choisit sante
         for(int i = 1; i < nbr ; i++){
             tmp = tab_res[i];
             int j = i - 1;
@@ -189,11 +191,11 @@ void tri(ARBRE *tab_arbres, int nbr){
                 tab_res[j+1] = tab_res[j];
                 j = j - 1;
             }
-            tab_res[j + 1] = tmp;
+            tab_res[j + 1] = tmp; // range la plus petite valeur du tableau de la partie droite (non trié) dans la partie gauche (déjà triée)
         }
     }
 
-    affiche_tableau(tab_res, nbr);
+    affiche_tableau(tab_res, nbr); // utilisation de la fonction affiche tableau pour afficher le résultat du tri
 }
 
 
