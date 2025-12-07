@@ -228,7 +228,7 @@ int main(){
                 recherche(tab_arbres, nb_arbres, cherche_espece);
                 
             }else if (strcmp(demarrage, "Trier") == 0){
-
+                tri(tab_arbres, nb_arbres);
             }else if (strcmp(demarrage, "Rien") == 0){
                 printf("Aurevoir !\n");
                 stop = 0;
