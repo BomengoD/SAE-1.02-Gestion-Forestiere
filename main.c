@@ -194,7 +194,7 @@ void tri(ARBRE *tab_arbres, int nbr){
             tab_res[j + 1] = tmp; // range la plus petite valeur du tableau de la partie droite (non trié) dans la partie gauche (déjà triée)
         }
     }
-
+    printf("\n------Tri par %s ------\n",choix);
     affiche_tableau(tab_res, nbr); // utilisation de la fonction affiche tableau pour afficher le résultat du tri
 }
 
