@@ -118,7 +118,7 @@ void afficher_tableau(ARBRE *tab, int nb) {
 
 int main(){
 
-    const char *nom_fichier = "Feuille de calcul sans titre - foret_arbres_50_V1.csv";
+    const char *nom_fichier = "foret_arbres_50_V2.csv";
     int nb_arbres = 0;
     ARBRE *tab_arbres = NULL;
     tab_arbres = malloc(TAILLE_MAX * sizeof (ARBRE)); // allocation initiale de mémoire pour le tableau des arbres
