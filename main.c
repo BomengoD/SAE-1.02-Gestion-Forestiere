@@ -19,6 +19,7 @@ typedef struct{
     float hauteur, diametre, volume;
 }ARBRE;
 
+
 /*Lors des essais, un problème a été rencontré, les nombres flottants étaient mal chargés à cause de la virgule 
 donc on a crée une fonction qui remplace la virgule du nombre flottant que contient le champ par un point.
 */
@@ -28,6 +29,12 @@ void remplacer_virgule(char *s){
             s[i] = '.';
         }
     }
+}
+
+
+
+void car_speciaux(char *s){
+
 }
 /*Prototype de la fonction de lecture, ses paramètres sont le nom du fichier et le nombre d'arbres, 
 passés par pointeur 
@@ -85,8 +92,6 @@ void lirecharger_fichier(const char *nom_fichier, int *nb_arbres, ARBRE **tab_ar
                 champ_num++;// incrémenter le compteur de champs   
             
             }
-
-            printf("\n");// nouvelle ligne après avoir affiché tous les champs de l'arbre
             i++; // incrémenter l'index du tableau des arbres
         }
 
@@ -155,14 +160,14 @@ int main(){
 
     tab_arbres = malloc(TAILLE_MAX * sizeof (ARBRE)); // allocation initiale de mémoire pour le tableau des arbres
     lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);
-    printf("\n Nombre d'arbres lus: %d\n", nb_arbres);
+    printf("Nombre d'arbres lus: %d\n", nb_arbres);
     if (nb_arbres != 0){
 
         printf("Les données du tableau sont :\n");
         affiche_tableau(tab_arbres, nb_arbres);
 
         while (stop){
-            printf("\n Que voulez vous faire ?(Saisir/Rechercher/Trier/Rien) :");
+            printf("\nQue voulez vous faire ?(Saisir/Rechercher/Trier/Rien) :");
             scanf("%s",demarrage);
             if (strcmp(demarrage, "Saisir") == 0){
 
