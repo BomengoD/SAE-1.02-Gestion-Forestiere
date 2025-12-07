@@ -151,6 +151,53 @@ void recherche(ARBRE *tab_arbres, int nbr, const char *espece){
     printf("Arbres %s trouve : %d",espece,count);
 }
 
+
+void tri(ARBRE *tab_arbres, int nbr){
+    int posMin = 0;
+    char choix[10] = "";
+    ARBRE tmp;
+    ARBRE *tab_res = malloc(nbr * sizeof(ARBRE));
+
+    for(int i = 0; i < nbr; i++){
+        tab_res[i] = tab_arbres[i];
+    }
+    printf("Voulez-vous trier par age ou par sante (age/sante) :\n");
+    scanf("%s", choix);
+    if (strcmp(choix, "age") == 0){
+        for(int i = 0; i < nbr - 2; i++){
+            posMin = i;
+            for(int j = i + 1; j < nbr; j++){
+                if(tab_res[j].age < tab_res[posMin].age){
+                    posMin = j;
+                }
+            }
+            tmp = tab_res[i];
+            tab_res[i] = tab_res[posMin];
+            tab_res[posMin] = tmp;
+
+        }
+
+        
+
+    }
+
+    else if (strcmp(choix, "sante") == 0){
+        for(int i = 1; i < nbr ; i++){
+            tmp = tab_res[i];
+            int j = i - 1;
+            while(j >= 0 && tab_res[j].sante > tmp.sante){
+                tab_res[j+1] = tab_res[j];
+                j = j - 1;
+            }
+            tab_res[j + 1] = tmp;
+        }
+    }
+
+    affiche_tableau(tab_res, nbr);
+}
+
+
+
 int main(){
 
     const char *nom_fichier = "foret_arbres_50_V1.csv";
