@@ -38,7 +38,9 @@ void compte_arbres(const char *nom_fichier, int *nb_arbres){
     FILE* fichier = NULL;// pointeur de fichier
     char chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
     fichier = fopen(nom_fichier, "r");
-    *nb_arbres = 0;
+    if (*nb_arbres != 0){
+        *nb_arbres = 0;
+    }
     if (fichier != NULL){
         fgets(chaine, sizeof(chaine), fichier); // lire la première ligne (en-tête) et l'ignorer !
 
@@ -46,10 +48,9 @@ void compte_arbres(const char *nom_fichier, int *nb_arbres){
             while (fgets(chaine, sizeof(chaine), fichier) != NULL){
                 (*nb_arbres)++; // incrémenter le compteur d'arbres pour chaque ligne lue
             }
-        }else{
-            perror("Erreur lors de l'ouverture du fichier");
-            exit(EXIT_FAILURE); 
-        }
+    }else{
+        printf("Erreur ouverture du fichier \n");
+    }
     fclose(fichier); // fermer le fichier après la lecture
 }
 /*Prototype de la fonction de lecture, ses paramètres sont le nom du fichier et le nombre d'arbres, 
@@ -63,7 +64,7 @@ void lirecharger_fichier(const char *nom_fichier, int *nb_arbres, ARBRE **tab_ar
     compte_arbres(nom_fichier, nb_arbres);
     fichier = fopen(nom_fichier, "r"); //a+ pour plus tard
 
-    if(fichier != NULL && nb_arbres != 0){
+    if(fichier != NULL){
         *tab_arbres = realloc(*tab_arbres, (*nb_arbres) * sizeof(ARBRE));
 
         fgets(chaine, sizeof(chaine), fichier); // lire et ignorer à nouveau la première ligne (en-tête)
@@ -106,8 +107,7 @@ void lirecharger_fichier(const char *nom_fichier, int *nb_arbres, ARBRE **tab_ar
         fclose(fichier); // fermer le fichier après la lecture
 
     }else{
-        perror("Erreur lors de l'ouverture du fichier");
-        exit(EXIT_FAILURE); 
+        printf("Erreur ouverture du fichier \n");
     }
 }
 
@@ -158,7 +158,7 @@ void recherche(ARBRE *tab_arbres, int nbr, char *espece){
 
     }
      printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
-    printf("Arbres %s trouve : %d",espece,count);
+        printf("Arbres %s trouve : %d",espece,count);
 }
 
 
@@ -245,8 +245,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
         fclose(fichier);
         
     }else{
-        perror("Erreur lors de l'ouverture du fichier");
-        exit(EXIT_FAILURE); 
+        printf("Erreur ouverture du fichier \n");
     }
 
 }
@@ -254,7 +253,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
 int main(){
 
     const char *nom_fichier = "foret_arbres_50_V1.csv";
-    int nb_arbres, stop = 1, saisie_arbres;
+    int nb_arbres = 0, stop = 1, saisie_arbres;
     ARBRE *tab_arbres = NULL;
     char reponse[20] = "", cherche_espece[20] = "", demarrage[20]="";
 
@@ -273,7 +272,7 @@ int main(){
             if (strcmp(demarrage, "Saisir") == 0){
                 printf("\nCombien d'arbres souhaitez-vous saisir ? :");
                 scanf("%d", &saisie_arbres);
-                
+                ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres, nb_arbres);
                 printf("\n Les arbres ont bien ete rajoutes.");
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
