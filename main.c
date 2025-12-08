@@ -49,7 +49,7 @@ void compte_arbres(const char *nom_fichier, int *nb_arbres){
                 (*nb_arbres)++; // incrémenter le compteur d'arbres pour chaque ligne lue
             }
     }else{
-        printf("Erreur ouverture du fichier \n");
+        exit(EXIT_FAILURE);
     }
     fclose(fichier); // fermer le fichier après la lecture
 }
@@ -158,7 +158,10 @@ void recherche(ARBRE *tab_arbres, int nbr, char *espece){
 
     }
      printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
-        printf("Arbres %s trouve : %d",espece,count);
+        printf("Arbres %s trouve : %d\n",espece,count);
+        if (count == 0){
+            printf("L'espèce n'est pas trouvable\n");
+        }
 }
 
 
@@ -172,7 +175,7 @@ void tri(ARBRE *tab_arbres, int nbr){
         tab_res[i] = tab_arbres[i]; // copie tab_arbres dans tab_res pour garder tab_arbres en original
     }
     
-    printf("Voulez-vous trier par age ou par sante ?(age/sante) :\n");
+    printf("Voulez-vous trier par age ou par sante ?(age/sante) :");
     scanf("%s", choix); 
     
     if (strcmp(choix, "age") == 0){ // tri par selection si on choisit age
@@ -209,6 +212,38 @@ void tri(ARBRE *tab_arbres, int nbr){
     free(tab_res);
 }
 
+
+int verif_id(const char *id,ARBRE *tab_arbres, int nb_arbres){
+    int k;
+    for (k = 0; k <nb_arbres; k++){
+        if (strcmp(id, tab_arbres[k].identifiant) == 0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int verif_age(int nb){
+    if (nb > 0){
+        return 1;
+    }
+    return 0;
+}
+int verif_sante(int nb){
+    if (nb > 0 && nb <= 10){
+        return 1;
+    }
+    return 0;
+}
+
+int verif_float(float nb){
+
+
+
+
+    return 0;
+}
+
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_arbres){
     FILE *fichier = NULL;
     ARBRE arbre;
@@ -220,16 +255,19 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
         for (i = 0; i < nba; i++){
             printf("Rentrez son identifiant :");
             scanf("%5s", arbre.identifiant);
-            for (k = 0; k < nb_arbres; k++){
-                while (strcmp(arbre.identifiant, tab_arbres[k].identifiant) == 0){
-                    printf("Ce n'est pas possible, l'arbre existe deja. Veuillez retaper un nouvel identifiant :");
-                    scanf("%6s", arbre.identifiant);
-                }
+           while (verif_id(arbre.identifiant, tab_arbres, nb_arbres)){
+                printf("Ce n'est pas possible, l'arbre existe deja. Le nombre d'arbres est de %d , veuillez retaper un nouvel identifiant :", nb_arbres);
+                scanf("%5s", arbre.identifiant);
             }
             printf("\nRentrez son espece :");
             scanf("%19s", arbre.espece);
             printf("\nRentrez son Age :");
             scanf("%3d", &arbre.age);
+            while (verif_age(arbre.age)){
+                printf("\nL'arbre doit au moins avoir 1 ans.\n");
+                printf("Retapez son âge :");
+                scanf("%3d", &arbre.age);
+            }
             printf("\nRentrez son hauteur :");
             scanf("%7.2f", &arbre.hauteur);
             printf("\nRentrez son diametre :");
@@ -238,6 +276,12 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             scanf("%7.2f", &arbre.volume);
             printf("\nRentrez son indice de sante sur 10 :");
             scanf("%d", &arbre.sante);
+            while (verif_sante(arbre.sante)){
+                printf("\nL'indice n'est pas correct, il doit etre entre 0 et 10(10 compris)\n");
+                printf("Retapez l'indice :");
+                scanf("%d", &arbre.sante);
+            }
+
             fprintf(fichier,"%6s;%20s;%3d;%7.2f;%8.2f;%7.2f;%d\n",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
             /*lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);*/
 
@@ -245,7 +289,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
         fclose(fichier);
         
     }else{
-        printf("Erreur ouverture du fichier \n");
+        exit(EXIT_FAILURE);
     }
 
 }
@@ -273,7 +317,6 @@ int main(){
                 printf("\nCombien d'arbres souhaitez-vous saisir ? :");
                 scanf("%d", &saisie_arbres);
                 ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres, nb_arbres);
-                printf("\n Les arbres ont bien ete rajoutes.");
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
