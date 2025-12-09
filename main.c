@@ -284,7 +284,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
         for (i = 0; i < nba; i++){
             printf("Rentrez son identifiant :");
             scanf("%5s", arbre.identifiant);
-           while (verif_id(arbre.identifiant, tab_arbres, nb_arbres)){
+           while (!verif_id(arbre.identifiant, tab_arbres, nb_arbres)){
                 printf("Ce n'est pas possible, l'arbre existe deja. Le nombre d'arbres est de %d , veuillez retaper un nouvel identifiant :", nb_arbres);
                 scanf("%5s", arbre.identifiant);
             }
@@ -292,14 +292,14 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             scanf("%19s", arbre.espece);
             printf("\nRentrez son Âge :");
             scanf("%3d", &arbre.age);
-            while (verif_age(arbre.age)){
+            while (!verif_age(arbre.age)){
                 printf("\nL'arbre doit au moins avoir 1 ans.\n");
                 printf("Retapez son âge :");
                 scanf("%3d", &arbre.age);
             }
             printf("\nRentrez son hauteur :");
             scanf("%7.2f", &arbre.hauteur);
-            while (verif_float(arbre.hauteur)){
+            while (!verif_float(arbre.hauteur)){
                 printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
                 printf("Retapez la hauteur :");
                 scanf("%7.2f", &arbre.hauteur);
@@ -307,7 +307,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             }
             printf("\nRentrez son diamètre :");
             scanf("%8.2f", &arbre.diametre);
-            while (verif_float(arbre.diametre)){
+            while (!verif_float(arbre.diametre)){
                 printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
                 printf("Retapez le diamètre :");
                 scanf("%8.2f", &arbre.diametre);
@@ -315,7 +315,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             }
             printf("\nRentrez son volume :");
             scanf("%7.2f", &arbre.volume);
-            while (verif_float(arbre.volume)){
+            while (!verif_float(arbre.volume)){
                 printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
                 printf("Retapez la hauteur :");
                 scanf("%7.2f", &arbre.volume);
@@ -323,7 +323,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             }
             printf("\nRentrez son indice de sante sur 10 :");
             scanf("%d", &arbre.sante);
-            while (verif_sante(arbre.sante)){
+            while (!verif_sante(arbre.sante)){
                 printf("\nL'indice n'est pas correct, il doit être entre 0 et 10(10 compris)\n");
                 printf("Retapez l'indice :");
                 scanf("%d", &arbre.sante);
@@ -362,9 +362,11 @@ int main(){
                 printf("\nCombien d'arbres souhaitez-vous saisir ? :");
                 scanf("%d", &saisie_arbres);
                 ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres, nb_arbres);
+                /*
                 compte_arbres(nom_fichier, &nb_arbres);
                 tab_arbres = realloc(tab_arbres, nb_arbres*sizeof (ARBRE)); // ré allocation  de mémoire pour le tableau des arbres
                 lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);
+                */
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
