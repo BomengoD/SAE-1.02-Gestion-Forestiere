@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <Windows.h>
+
 /*Code principale de l'application, elle doit être capable de:
 Lire le fichier csv et afficher l'ensembe de ses données de manière visible
 Charger les données du fichier csv dans une structure adaptée
@@ -144,7 +146,7 @@ void recherche(ARBRE *tab_arbres, int nbr, char *espece){
     espece[0] = toupper(espece[0]);
     for (int i = 0 ; i < nbr;i++){
         if (strcmp(tab_arbres[i].espece, espece) == 0){
-            printf("| %-6s | %-20s | %-3d | %-7.2f| %-8.2f| %-7.2f  | %-d       |\n", 
+            printf("| %-6s | %-40s | %-3d | %-7.2f| %-8.2f| %-7.2f  | %-d       |\n", 
             tab_arbres[i].identifiant,
             tab_arbres[i].espece,
             tab_arbres[i].age,
@@ -237,11 +239,11 @@ int verif_sante(int nb){
 }
 
 int verif_float(float nb){
-
-
-
-
+    if (scanf("%f", nb)){
+        return 1;
+    }
     return 0;
+
 }
 
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_arbres){
@@ -270,10 +272,28 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             }
             printf("\nRentrez son hauteur :");
             scanf("%7.2f", &arbre.hauteur);
+            while (verif_float(arbre.hauteur)){
+                printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
+                printf("Retapez la hauteur :");
+                scanf("%7.2f", &arbre.hauteur);
+
+            }
             printf("\nRentrez son diametre :");
             scanf("%8.2f", &arbre.diametre);
+            while (verif_float(arbre.diametre)){
+                printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
+                printf("Retapez le diametre :");
+                scanf("%8.2f", &arbre.diametre);
+
+            }
             printf("\nRentrez son volume :");
             scanf("%7.2f", &arbre.volume);
+            while (verif_float(arbre.volume)){
+                printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
+                printf("Retapez la hauteur :");
+                scanf("%7.2f", &arbre.volume);
+
+            }
             printf("\nRentrez son indice de sante sur 10 :");
             scanf("%d", &arbre.sante);
             while (verif_sante(arbre.sante)){
@@ -295,7 +315,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
 }
 
 int main(){
-
+    SetConsoleOutputCP(CP_UTF8);
     const char *nom_fichier = "foret_arbres_50_V1.csv";
     int nb_arbres = 0, stop = 1, saisie_arbres;
     ARBRE *tab_arbres = NULL;
