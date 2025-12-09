@@ -118,7 +118,7 @@ void lirecharger_fichier(const char *nom_fichier, int *nb_arbres, ARBRE **tab_ar
 void affiche_tableau(ARBRE *tab_arbres, int nb_arbres){
     int i;
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
-    printf("| ID     | Espece               | Age | Hauteur| Diametre| Volume   | Sante   |\n");
+    printf("| ID     | Espèce               | Âge | Hauteur| Diamètre| Volume   | Santé   |\n");
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
 
     for (i = 0; i < nb_arbres; i++){
@@ -141,7 +141,7 @@ void recherche(ARBRE *tab_arbres, int nbr, char *espece){
     int count = 0;
     printf("\n------Recherche %s ------\n",espece);
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
-    printf("| ID     | Espece               | Age | Hauteur| Diametre| Volume   | Sante   |\n");
+    printf("| ID     | Espèce               | Âge | Hauteur| Diamètre| Volume   | Santé   |\n");
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
     espece[0] = toupper(espece[0]);
     for (int i = 0 ; i < nbr;i++){
@@ -162,7 +162,7 @@ void recherche(ARBRE *tab_arbres, int nbr, char *espece){
      printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
         printf("Arbres %s trouve : %d\n",espece,count);
         if (count == 0){
-            printf("L'espèce n'est pas trouvable\n");
+            printf("L'espèce n'est pas trouvable.\n");
         }
 }
 
@@ -177,10 +177,10 @@ void tri(ARBRE *tab_arbres, int nbr){
         tab_res[i] = tab_arbres[i]; // copie tab_arbres dans tab_res pour garder tab_arbres en original
     }
     
-    printf("Voulez-vous trier par age ou par sante ?(age/sante) :");
+    printf("Voulez-vous trier par âge ou par santé ?(âge/santé) :");
     scanf("%s", choix); 
     
-    if (strcmp(choix, "age") == 0){ // tri par selection si on choisit age
+    if (strcmp(choix, "âge") == 0){ // tri par selection si on choisit age
         for(int i = 0; i < nbr - 2; i++){
             posMin = i;
             for(int j = i + 1; j < nbr; j++){
@@ -198,7 +198,7 @@ void tri(ARBRE *tab_arbres, int nbr){
 
     }
 
-    else if (strcmp(choix, "sante") == 0){ // tri par insertion si on choisit sante
+    else if (strcmp(choix, "santé") == 0){ // tri par insertion si on choisit sante
         for(int i = 1; i < nbr ; i++){
             tmp = tab_res[i];
             int j = i - 1;
@@ -261,9 +261,9 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
                 printf("Ce n'est pas possible, l'arbre existe deja. Le nombre d'arbres est de %d , veuillez retaper un nouvel identifiant :", nb_arbres);
                 scanf("%5s", arbre.identifiant);
             }
-            printf("\nRentrez son espece :");
+            printf("\nRentrez son espèce :");
             scanf("%19s", arbre.espece);
-            printf("\nRentrez son Age :");
+            printf("\nRentrez son Âge :");
             scanf("%3d", &arbre.age);
             while (verif_age(arbre.age)){
                 printf("\nL'arbre doit au moins avoir 1 ans.\n");
@@ -278,11 +278,11 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
                 scanf("%7.2f", &arbre.hauteur);
 
             }
-            printf("\nRentrez son diametre :");
+            printf("\nRentrez son diamètre :");
             scanf("%8.2f", &arbre.diametre);
             while (verif_float(arbre.diametre)){
                 printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
-                printf("Retapez le diametre :");
+                printf("Retapez le diamètre :");
                 scanf("%8.2f", &arbre.diametre);
 
             }
@@ -297,7 +297,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             printf("\nRentrez son indice de sante sur 10 :");
             scanf("%d", &arbre.sante);
             while (verif_sante(arbre.sante)){
-                printf("\nL'indice n'est pas correct, il doit etre entre 0 et 10(10 compris)\n");
+                printf("\nL'indice n'est pas correct, il doit être entre 0 et 10(10 compris)\n");
                 printf("Retapez l'indice :");
                 scanf("%d", &arbre.sante);
             }
@@ -326,7 +326,7 @@ int main(){
     printf("Nombre d'arbres lus: %d\n", nb_arbres);
     if (nb_arbres != 0){
 
-        printf("Les donnees du tableau sont :\n");
+        printf("Les données du tableau sont :\n");
         affiche_tableau(tab_arbres, nb_arbres);
 
         while (stop){
