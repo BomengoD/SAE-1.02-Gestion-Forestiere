@@ -35,6 +35,30 @@ void remplacer_virgule(char *s){
 }
 
 
+int largeur_visible_utf8(const char *s) {
+    int width = 0;
+    unsigned char c;
+    while ((c = (unsigned char)*s++)) {
+        if (c < 128) {
+            width++;        // ASCII
+        } else if ((c >> 5) == 0x6) {
+            s++; width++;   // début d’un caractère sur 2 octets
+        } else if ((c >> 4) == 0xE) {
+            s+=2; width++;  // début sur 3 octets
+        } else if ((c >> 3) == 0x1E) {
+            s+=3; width++;  // 4 octets
+        }
+    }
+    return width;
+}
+
+void print_col_utf8(const char *txt, int taille) {
+    int vis = largeur_visible_utf8(txt);
+    printf("%s", txt);
+    for (int i = 0; i < taille - vis; i++)
+        printf(" ");
+}
+
 
 void compte_arbres(const char *nom_fichier, int *nb_arbres){
     FILE* fichier = NULL;// pointeur de fichier
@@ -63,11 +87,9 @@ void lirecharger_fichier(const char *nom_fichier, int *nb_arbres, ARBRE **tab_ar
     ARBRE* p = NULL; // pointeur vers une structure ARBRE
     char chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
     int i = 0;
-    compte_arbres(nom_fichier, nb_arbres);
     fichier = fopen(nom_fichier, "r"); //a+ pour plus tard
 
     if(fichier != NULL){
-        *tab_arbres = realloc(*tab_arbres, (*nb_arbres) * sizeof(ARBRE));
 
         fgets(chaine, sizeof(chaine), fichier); // lire et ignorer à nouveau la première ligne (en-tête)
 
@@ -109,7 +131,7 @@ void lirecharger_fichier(const char *nom_fichier, int *nb_arbres, ARBRE **tab_ar
         fclose(fichier); // fermer le fichier après la lecture
 
     }else{
-        printf("Erreur ouverture du fichier \n");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -122,15 +144,18 @@ void affiche_tableau(ARBRE *tab_arbres, int nb_arbres){
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
 
     for (i = 0; i < nb_arbres; i++){
-        printf("| %-6s | %-20s | %-3d | %-7.2f| %-8.2f| %-7.2f  | %-d       |\n", // les - servent à aligner à gauche
-        tab_arbres[i].identifiant,
-        tab_arbres[i].espece,
-        tab_arbres[i].age,
-        tab_arbres[i].hauteur,
-        tab_arbres[i].diametre,
-        tab_arbres[i].volume,
-        tab_arbres[i].sante
+        printf("| ");
+        print_col_utf8(tab_arbres[i].identifiant, 6);
+        printf(" | ");
+        print_col_utf8(tab_arbres[i].espece, 20);
+        printf(" | %-3d | %-6.2f | %-7.2f | %-8.2f | %-d       |\n",//- Permet d'aligner à gauche
+            tab_arbres[i].age,
+            tab_arbres[i].hauteur,
+            tab_arbres[i].diametre,
+            tab_arbres[i].volume,
+            tab_arbres[i].sante
         );
+
     }
 
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
@@ -146,21 +171,23 @@ void recherche(ARBRE *tab_arbres, int nbr, char *espece){
     espece[0] = toupper(espece[0]);
     for (int i = 0 ; i < nbr;i++){
         if (strcmp(tab_arbres[i].espece, espece) == 0){
-            printf("| %-6s | %-40s | %-3d | %-7.2f| %-8.2f| %-7.2f  | %-d       |\n", 
-            tab_arbres[i].identifiant,
-            tab_arbres[i].espece,
+            printf("| ");
+            print_col_utf8(tab_arbres[i].identifiant, 6);
+            printf(" | ");
+            print_col_utf8(tab_arbres[i].espece, 20);
+            printf(" | %-3d | %-6.2f | %-7.2f | %-8.2f | %-d       |\n",//- Permet d'aligner à gauche
             tab_arbres[i].age,
             tab_arbres[i].hauteur,
             tab_arbres[i].diametre,
             tab_arbres[i].volume,
             tab_arbres[i].sante
-            );
+             );
             count++;
         }
 
     }
      printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
-        printf("Arbres %s trouve : %d\n",espece,count);
+        printf("Arbre(s) %s trouvé(s) : %d\n",espece,count);
         if (count == 0){
             printf("L'espèce n'est pas trouvable.\n");
         }
@@ -303,11 +330,8 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
             }
 
             fprintf(fichier,"%6s;%20s;%3d;%7.2f;%8.2f;%7.2f;%d\n",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
-            /*lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);*/
-
         }
-        fclose(fichier);
-        
+        fclose(fichier);  
     }else{
         exit(EXIT_FAILURE);
     }
@@ -316,12 +340,13 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres, int nb_
 
 int main(){
     SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
     const char *nom_fichier = "foret_arbres_50_V1.csv";
     int nb_arbres = 0, stop = 1, saisie_arbres;
     ARBRE *tab_arbres = NULL;
     char reponse[20] = "", cherche_espece[20] = "", demarrage[20]="";
-
-    tab_arbres = malloc(TAILLE_MAX * sizeof (ARBRE)); // allocation initiale de mémoire pour le tableau des arbres
+    compte_arbres(nom_fichier, &nb_arbres);
+    tab_arbres = malloc(nb_arbres * sizeof (ARBRE)); // allocation  de mémoire pour le tableau des arbres
     lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);
     printf("Nombre d'arbres lus: %d\n", nb_arbres);
     if (nb_arbres != 0){
@@ -337,6 +362,9 @@ int main(){
                 printf("\nCombien d'arbres souhaitez-vous saisir ? :");
                 scanf("%d", &saisie_arbres);
                 ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres, nb_arbres);
+                compte_arbres(nom_fichier, &nb_arbres);
+                tab_arbres = realloc(tab_arbres, nb_arbres*sizeof (ARBRE)); // ré allocation  de mémoire pour le tableau des arbres
+                lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
