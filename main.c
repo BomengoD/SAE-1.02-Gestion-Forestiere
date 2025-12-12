@@ -320,13 +320,8 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
     fichier = fopen(nom_fichier, "a+");
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
-
-            printf("\nRentrez son identifiant :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%s", arbre.identifiant) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
-            }
+            scanf(arbre.identifiant,"AR0%3d",compteur) //auto intcrémentation de l'id de l'arbre
+                
             printf("\nRentrez son espèce :");
             fgets(chaine, sizeof(chaine), stdin);
             chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
