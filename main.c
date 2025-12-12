@@ -25,7 +25,13 @@ typedef struct{
     float hauteur, diametre, volume;
 }ARBRE;
 
-
+/*Procédure qui vide les entrées*/
+void nettoyer() {
+    int c;
+    while ((c = getchar())!= '\n' && c!= EOF) {
+        // Ignorer les caractères restants
+    }
+}
 /*Lors des essais, un problème a été rencontré, les nombres flottants étaient mal chargés à cause de la virgule 
 donc on a crée une fonction qui remplace la virgule du nombre flottant que contient le champ par un point.
 Procédure qui remplace les virgules des nombres flottants dans le fichier csv par des points*/
@@ -247,9 +253,8 @@ void tri(ARBRE *tab_arbres){
 
 
 /*
-void auto_id(ARBRE arbre, int compteur){
-    *arbre.identifiant = "AR" + (nb_arbres +1);
-    sprintf(*arbre.identifiant, "AR%03d",compteur );
+void auto_id(ARBRE *arbre, int compteur){
+    *arbre.identifiant = "AR" + str(compteur);
 }
 */
 int verif_age(int nb){
@@ -272,72 +277,65 @@ int verif_float(float nb){
     return 1;
 }
 
-/*int verif_espece(const char *chaine, ARBRE *tab_arbres){
-    for (int i = 0; i < nb_arbres ; i++){
-         if (!strcmp(chaine, tab_arbres[i].espece)){
-                return 0;
-         }
-    }
-    if (sscanf(chaine,"%s",))
-
+int verif_espece(FILE *flux){
+    
 }
-*/
+
 
 /*Procédure qui permet à l'utilisateur d'écrire dans le fichier csv*/
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
     FILE *fichier = NULL;
     ARBRE arbre;
     char chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
-    const char *separateur = ";";
     int i, k, compteur = nb_arbres + 1;
     fichier = fopen(nom_fichier, "a+");
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
-            /*auto_id(arbre, compteur);*/
+            /*auto_id(&arbre, compteur);*/
+            printf("\nRentrez son identifiant :");
+            fgets(chaine, sizeof(arbre.identifiant), stdin);
+            nettoyer();
+            if (sscanf(chaine, "%s", &arbre.identifiant) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
+            }
             printf("\nRentrez son espèce :");
-            fgets(arbre.espece, sizeof(arbre.espece),stdin);
-           /* verif_espece(arbre.espece, &tab_arbres);*/
-
+            fgets(chaine, sizeof(arbre.espece),stdin);
+            nettoyer();
+            if (sscanf(chaine, "%s", &arbre.espece) != 1){
+            printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
+            }
             printf("\nRentrez son Âge :");
-            scanf("%3d", &arbre.age);
-            while (!verif_age(arbre.age)){
-                printf("\nL'arbre doit au moins avoir 1 ans.\n");
-                printf("Retapez son âge :");
-                scanf("%3d", &arbre.age);
+            fgets(chaine, sizeof(arbre.age), stdin);
+            if (sscanf(chaine, "%3d",&arbre.age) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.");
             }
             printf("\nRentrez son hauteur :");
-            scanf("%7.2f", &arbre.hauteur);
-            while (!verif_float(arbre.hauteur)){
-                printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
-                printf("Retapez la hauteur :");
-                scanf("%7.2f", &arbre.hauteur);
-
-            }
-            printf("\nRentrez son diamètre :");
-            scanf("%8.2f", &arbre.diametre);
-            while (verif_float(arbre.diametre)){
-                printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
-                printf("Retapez le diamètre :");
-                scanf("%8.2f", &arbre.diametre);
-
+            fgets(chaine, sizeof(arbre.hauteur), stdin);
+            if (sscanf(chaine, "%7.2f", &arbre.hauteur) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
             }
             printf("\nRentrez son volume :");
-            scanf("%7.2f", &arbre.volume);
-            while (verif_float(arbre.volume)){
-                printf("\nC'est pas correct, c'est un nombre à virgule supérieur à 0\n");
-                printf("Retapez la hauteur :");
-                scanf("%7.2f", &arbre.volume);
-
+            (fgets(chaine, sizeof(arbre.volume), stdin));
+            if (sscanf(chaine, "%8.2f", &arbre.volume) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
+            }
+            printf("\nRentrez son diamètre :");
+            fgets(chaine, sizeof(arbre.diametre), stdin);
+            if (sscanf(chaine, "%7.2f", &arbre.diametre) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
+            }
+            printf("\nRentrez son volume :");
+            fgets(chaine, sizeof(arbre.volume), stdin);
+            if (sscanf(chaine, "%8.2f", &arbre.volume) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
             }
             printf("\nRentrez son indice de sante sur 10 :");
-            scanf("%d", &arbre.sante);
-            while (verif_sante(arbre.sante)){
-                printf("\nL'indice n'est pas correct, il doit être entre 0 et 10(10 compris)\n");
-                printf("Retapez l'indice :");
-                scanf("%d", &arbre.sante);
+            fgets(chaine, sizeof(arbre.sante), stdin);
+            if (sscanf(chaine, "%d", &arbre.sante) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.");
             }
 
-            fprintf(fichier,"%6s;%20s;%3d;%7.2f;%8.2f;%7.2f;%d\n",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
+            fprintf(fichier,"%s;%s;%d;%.2f;%.2f;%.2f;%d\n",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
             compteur++;
         }
         fclose(fichier);  
@@ -367,10 +365,12 @@ int main(){
         while (stop){
             printf("\nQue voulez vous faire ?(Afficher/Saisir/Rechercher/Trier/Rien) :");
             scanf("%10s",demarrage);
+            nettoyer();
             demarrage[0] = toupper(demarrage[0]);
             if (strcmp(demarrage, "Saisir") == 0){
                 printf("\nCombien d'arbres souhaitez-vous saisir ? :");
                 scanf("%d", &saisie_arbres);
+                nettoyer();
                 ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres);
                 /*
                 compte_arbres(nom_fichier, &nb_arbres);
@@ -378,9 +378,11 @@ int main(){
                 lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);
                 */
 
+
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
                 scanf("%s", cherche_espece);
+                nettoyer();
                 recherche(tab_arbres,cherche_espece);
                 
             }else if (strcmp(demarrage, "Trier") == 0){
