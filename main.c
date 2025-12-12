@@ -43,13 +43,6 @@ void remplacer_virgule(char *s){
         }
     }
 }
-void remplacer_point(char *s){
-    for (int i = 0; s[i]; i++){
-        if (s[i] == '.'){
-            s[i] = ',';
-        }
-    }
-}
 /*Deuxième problème, après avoir trouver comment afficher et rentrer des caractères spéciaux, la console les affichaient rétrécis, avec de la marge*/
 /*Procédure qui corrige la largeur des caractères spéciaux*/
 int largeur_visible_utf8(const char *s) {
@@ -258,109 +251,112 @@ void tri(ARBRE *tab_arbres){
     free(tab_res);
 }
 
-void ajouter_arbre(ARBRE **tab_arbres, int nv_arbres, const char *nom_fichier){
-    FILE* fichier = NULL;// pointeur de fichier
-    char chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
-    int i = 0;
-    *tab_arbres = realloc(*tab_arbres, (nb_arbres + nv_arbres) * sizeof(ARBRE));
-    fichier = fopen(nom_fichier, "r"); //a+ pour plus tard
-    ARBRE* p = NULL; // pointeur vers une structure ARBRE
-    if(fichier != NULL){
 
-        fgets(chaine, sizeof(chaine), fichier); // lire et ignorer à nouveau la première ligne (en-tête)
 
-        while (fgets(chaine, sizeof(chaine), fichier) != NULL){
-
-            p = &((*tab_arbres)[i]); // pointeur vers l'arbre courant dans le tableau
-
-            char *champ = strtok(chaine, ";"); // découpage de la ligne en champs(token) par le séparateur ";" via strtok
-            int champ_num = 1; // compteur de champs
-
-            while ( champ_num < 8){// boucle pour afficher chaque champ(progression sur la ligne) tant qu'il y a des champs et que le nombre de champs est inférieur à 7(qui est le nombre d'attributs d'un arbre donc le nombre de colonnnes dans le fichier csv)
-
-                      if (champ_num == 1) {
-                        strcpy(p->identifiant, champ); // copier l'identifiant dans la structure ARBRE via strcpy
-                    } else if (champ_num == 2) {
-                        strcpy(p->espece, champ); // copier l'espèce dans la structure ARBRE
-                    } else if (champ_num == 3) {
-                        p->age = atoi(champ); // convertir et stocker l'âge dans la structure ARBRE via atoi
-                    } else if (champ_num == 4) {
-                        remplacer_virgule(champ);//On change la virgule du nombre flottant par un point 
-                        p->hauteur = atof(champ); // convertir et stocker la hauteur dans la structure ARBRE via atof
-                    } else if (champ_num == 5) {
-                        remplacer_virgule(champ);
-                        p->diametre = atof(champ); // convertir et stocker le diamètre dans la structure ARBRE
-                    } else if (champ_num == 6) {
-                        remplacer_virgule(champ);
-                        p->volume = atof(champ); // convertir et stocker le volume dans la structure ARBRE
-                    } else if (champ_num == 7) {
-                        p->sante = atoi(champ); // convertir et stocker la santé dans la structure ARBRE
-                    }
-
-                champ = strtok(NULL, ";");// obtenir le champ suivant, NULL indique de continuer à partir de la position actuelle
-                champ_num++;// incrémenter le compteur de champs   
-            
-            }
-            i++; // incrémenter l'index du tableau des arbres
+/* Inverse de la fonction remplacer_virgule pour l'écriture dans le fichier csv(respect du format)*/
+void flottant_chaine(float valeur, char *chaine) {
+    sprintf(chaine,"%.2f", valeur);
+    for (int i = 0; chaine[i]; i++) {
+        if (chaine[i] == '.') {
+            chaine[i] = ',';
         }
-
-        fclose(fichier); // fermer le fichier après la lecture
-
-    }else{
-        exit(EXIT_FAILURE);
     }
 }
+
+
+/*Fonction qui rajoute un arbre dans le tableau*/
+void ajouter_arbre(ARBRE **tab_arbres, ARBRE *arbre, int *nb_arbres){
+    ARBRE *temp = realloc(*tab_arbres, (*nb_arbres + 1) * sizeof(ARBRE));
+    if (temp != NULL) {
+        *tab_arbres = temp;
+        *tab_arbres[*nb_arbres - 1] = *arbre; // Copier l'arbre dans la nouvelle position
+        *nb_arbres++; // Incrémenter le nombre d'arbres
+    } else {
+        printf("Erreur de réallocation de mémoire.\n");
+    }
+}
+
+/*Fonction qui vérifie si le nombre est un entier supérieur à 0*/
+int lire_entier(const char *prompt) {
+    char chaine[32];
+    int value, stop = 1;
+    while (stop) {
+        printf("%s", prompt);
+        if (fgets(chaine, sizeof(chaine), stdin) != NULL) {
+            // Supprimer le saut de ligne éventuel
+            chaine[strcspn(chaine, "\n")] = '\0';
+            // Tenter de convertir en entier
+            if (sscanf(chaine, "%d", &value) == 1) {
+                if (value > 0) {
+                    return value; // Conversion réussie et valeur positive
+                }
+            } 
+            printf("Entrée invalide. Veuillez entrer un entier valide.\n");
+            
+        } else {
+            printf("Erreur de lecture. Veuillez réessayer.\n");
+        }
+    }
+}
+
+/*Fonction qui vérifie que le nombre saisie est un flottant supérieur à 0*/
+int lire_flottant(const char *prompt) {
+    char chaine[32];
+    int  stop = 1;
+    float value;
+    while (stop) {
+        printf("%s", prompt);
+        if (fgets(chaine, sizeof(chaine), stdin) != NULL) {
+            // Supprimer le saut de ligne éventuel
+            chaine[strcspn(chaine, "\n")] = '\0';
+            // Tenter de convertir en entier
+            if (sscanf(chaine, "%f", &value) == 1) {
+                if (value > 0) {
+                    return value; // Conversion réussie et valeur positive
+                }
+            } 
+            printf("Entrée invalide. Veuillez entrer un entier valide.\n");
+            
+        } else {
+            printf("Erreur de lecture. Veuillez réessayer.\n");
+        }
+    }
+}
+
 
 /*Procédure qui permet à l'utilisateur d'écrire dans le fichier csv*/
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
     FILE *fichier = NULL;
     ARBRE arbre;
-    char chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
-    int i, k, compteur = nb_arbres + 1;
+    char hauteur_str[32], volume_str[32],diametre_str[32], chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
+    int i, compteur = nb_arbres + 1;
     fichier = fopen(nom_fichier, "a+");
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
-            scanf(arbre.identifiant,"AR0%3d",compteur) //auto intcrémentation de l'id de l'arbre
-                
-            printf("\nRentrez son espèce :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%s", arbre.espece) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
-            }
-            printf("\nRentrez son Âge :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%d", &arbre.age) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.\n");
-            }
-            printf("\nRentrez son hauteur :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%f", &arbre.hauteur) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.\n");
-            }
-            printf("\nRentrez son diamètre :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%f", &arbre.diametre) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.\n");
-            }
-            printf("\nRentrez son volume :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%f", &arbre.volume) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.\n");
-            }
-            printf("\nRentrez son indice de sante sur 10 :");
-            fgets(chaine, sizeof(chaine), stdin);
-            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
-            if (sscanf(chaine, "%d", &arbre.sante) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.\n");
-            }
-
-            sprintf(chaine,"\n%s;%s;%d;%.2f;%.2f;%.2f;%d",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
+            snprintf(arbre.identifiant,sizeof(arbre.identifiant),"AR%03d",compteur); //auto intcrémentation de l'id de l'arbre
+            printf("Rentrez son espèce :");
+            fgets(arbre.espece, sizeof(arbre.espece), stdin);
+            arbre.espece[0] = toupper(arbre.espece[0]);
+            arbre.espece[strcspn(arbre.espece, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            arbre.age = lire_entier("Rentrez son âge :");
+            arbre.hauteur = lire_flottant("Rentrez sa hauteur :");
+            arbre.diametre = lire_flottant("Rentrez son diamètre :");
+            arbre.volume = lire_flottant("Rentrez son volume :");
+            arbre.sante = lire_entier("Rentrez son indice de sante sur 10 :");
+            flottant_chaine(arbre.hauteur, hauteur_str);
+            flottant_chaine(arbre.volume, volume_str);
+            flottant_chaine(arbre.diametre, diametre_str);
+            sprintf(chaine,"\n%s;%s;%d;%s;%s;%s;%d",
+                arbre.identifiant,
+                arbre.espece,
+                arbre.age,
+                hauteur_str,
+                diametre_str,
+                volume_str,
+                arbre.sante
+            );
             fprintf(fichier, "%s", chaine);
+            ajouter_arbre(&tab_arbres, &arbre, &nb_arbres);
             compteur++;
         }
         fclose(fichier);  
@@ -397,12 +393,6 @@ int main(){
                 scanf("%d", &saisie_arbres);
                 nettoyer();
                 ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres);
-                /*
-                compte_arbres(nom_fichier, &nb_arbres);
-                tab_arbres = realloc(tab_arbres, nb_arbres*sizeof (ARBRE)); // ré allocation  de mémoire pour le tableau des arbres
-                lirecharger_fichier(nom_fichier, &nb_arbres, &tab_arbres);
-                */
-
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
