@@ -336,7 +336,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
                 printf("L'entrée n'est pas valide, veuillez entrez un entier correct.\n");
             }
 
-            fprintf(fichier,"%s;%s;%d;%.2f;%.2f;%.2f;%d\n",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
+            fprintf(fichier,"\n%s;%s;%d;%.2f;%.2f;%.2f;%d",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
             compteur++;
         }
         fclose(fichier);  
