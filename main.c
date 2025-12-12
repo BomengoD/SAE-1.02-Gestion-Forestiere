@@ -17,6 +17,7 @@ Soit CINQ/SIX fonctions minimum
 */
 
 #define TAILLE_MAX 100
+// Variable globale qui compte le nombre d'arbres dans le fichier
 int nb_arbres = 0;
 /*Déclaration du type de données utilisé pour l'enregistrment des arbes : structure, avec un tableau dynamique d'éléments ARBRE(déclaré dans la fonction principale)*/
 typedef struct{
@@ -293,46 +294,46 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
         for (i = 0; i < nba; i++){
             /*auto_id(&arbre, compteur);*/
             printf("\nRentrez son identifiant :");
-            fgets(chaine, sizeof(arbre.identifiant), stdin);
-            nettoyer();
-            if (sscanf(chaine, "%s", &arbre.identifiant) != 1){
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            if (sscanf(chaine, "%s", arbre.identifiant) != 1){
                 printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
             }
             printf("\nRentrez son espèce :");
-            fgets(chaine, sizeof(arbre.espece),stdin);
-            nettoyer();
-            if (sscanf(chaine, "%s", &arbre.espece) != 1){
-            printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            if (sscanf(chaine, "%s", arbre.espece) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez une chaîne de caractères.\n");
             }
             printf("\nRentrez son Âge :");
-            fgets(chaine, sizeof(arbre.age), stdin);
-            if (sscanf(chaine, "%3d",&arbre.age) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.");
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            if (sscanf(chaine, "%d", &arbre.age) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.\n");
             }
             printf("\nRentrez son hauteur :");
-            fgets(chaine, sizeof(arbre.hauteur), stdin);
-            if (sscanf(chaine, "%7.2f", &arbre.hauteur) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
-            }
-            printf("\nRentrez son volume :");
-            (fgets(chaine, sizeof(arbre.volume), stdin));
-            if (sscanf(chaine, "%8.2f", &arbre.volume) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            if (sscanf(chaine, "%f", &arbre.hauteur) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.\n");
             }
             printf("\nRentrez son diamètre :");
-            fgets(chaine, sizeof(arbre.diametre), stdin);
-            if (sscanf(chaine, "%7.2f", &arbre.diametre) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            if (sscanf(chaine, "%f", &arbre.diametre) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.\n");
             }
             printf("\nRentrez son volume :");
-            fgets(chaine, sizeof(arbre.volume), stdin);
-            if (sscanf(chaine, "%8.2f", &arbre.volume) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.");
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            if (sscanf(chaine, "%f", &arbre.volume) != 1){
+                printf("L'entrée n'est pas valide, veuillez entrez un nombre à virgule correct.\n");
             }
             printf("\nRentrez son indice de sante sur 10 :");
-            fgets(chaine, sizeof(arbre.sante), stdin);
+            fgets(chaine, sizeof(chaine), stdin);
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
             if (sscanf(chaine, "%d", &arbre.sante) != 1){
-                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.");
+                printf("L'entrée n'est pas valide, veuillez entrez un entier correct.\n");
             }
 
             fprintf(fichier,"%s;%s;%d;%.2f;%.2f;%.2f;%d\n",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
