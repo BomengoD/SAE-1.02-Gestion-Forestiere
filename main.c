@@ -27,9 +27,9 @@ typedef struct{
 }ARBRE;
 
 /*Procédure qui vide les entrées*/
-void nettoyer() {
+void nettoyer(){
     int c;
-    while ((c = getchar())!= '\n' && c!= EOF) {
+    while ((c = getchar())!= '\n' && c!= EOF){
         // Ignorer les caractères restants
     }
 }
@@ -45,29 +45,30 @@ void remplacer_virgule(char *s){
 }
 /*Deuxième problème, après avoir trouver comment afficher et rentrer des caractères spéciaux, la console les affichaient rétrécis, avec de la marge*/
 /*Procédure qui corrige la largeur des caractères spéciaux*/
-int largeur_visible_utf8(const char *s) {
-    int width = 0;
-    unsigned char c;
-    while ((c = (unsigned char)*s++)) {
-        if (c < 128) {
-            width++;        // ASCII
-        } else if ((c >> 5) == 0x6) {
-            s++; width++;   // début d’un caractère sur 2 octets
-        } else if ((c >> 4) == 0xE) {
-            s+=2; width++;  // début sur 3 octets
-        } else if ((c >> 3) == 0x1E) {
-            s+=3; width++;  // 4 octets
+int largeur_visible_utf8(const char *s){
+    int largeur = 0;// largeur visible en nombre de caractères
+    unsigned char c;//unsigned char pour gérer les caractères spéciaux
+    while ((c = (unsigned char)*s++)){// parcours de la chaîne octet par octet
+        if (c < 128){// caractère ASCII
+            largeur++;// un octet = un caractère donc normal 
+        } else if ((c >> 5) == 0x6){//On vérifie si les 3 premiers bits sont 110
+            s++; largeur++;   // caractère codé sur 2 octets donc on saute un octet
+        } else if ((c >> 4) == 0xE){//On vérifie si les 4 premiers bits sont 1110
+            s+=2; largeur++;  // caractère codé sur 3 octets donc on saute deux octets
+        } else if ((c >> 3) == 0x1E){//On vérifie si les 5 premiers bits sont 11110
+            s+=3; largeur++;  // caractère codé sur  4 octets donc on saute trois octets
         }
     }
-    return width;
+    return largeur;
 }
 
 /*Procédure qui soigne l'affichage*/
-void print_col_utf8(const char *txt, int taille) {
-    int vis = largeur_visible_utf8(txt);
+void print_col_utf8(const char *txt, int taille){
+    int visible = largeur_visible_utf8(txt);// largeur visible du texte
     printf("%s", txt);
-    for (int i = 0; i < taille - vis; i++)
+    for (int i = 0; i < taille - visible; i++){// ajoute des espaces pour atteindre la taille désirée, 6 - 3 = 3 espaces
         printf(" ");
+    }
 }
 
 /*Procédure qui parcourt le fichier afin de compter le nombre d'arbres*/
@@ -110,7 +111,7 @@ void lirecharger_fichier(const char *nom_fichier, ARBRE **tab_arbres){//On point
             char *champ = strtok(chaine, ";"); // découpage de la ligne en champs(token) par le séparateur ";" via strtok
             int champ_num = 1; // compteur de champs
 
-            while ( champ_num < 8){// boucle pour afficher chaque champ(progression sur la ligne) tant qu'il y a des champs et que le nombre de champs est inférieur à 7(qui est le nombre d'attributs d'un arbre donc le nombre de colonnnes dans le fichier csv)
+            while ( champ_num < 8){// boucle pour chaque champ(progression sur la ligne) tant qu'il y a des champs et que le nombre de champs est inférieur à 7(qui est le nombre d'attributs d'un arbre donc le nombre de colonnnes dans le fichier csv)
 
                       if (champ_num == 1) {
                         strcpy(p->identifiant, champ); // copier l'identifiant dans la structure ARBRE via strcpy
@@ -169,6 +170,7 @@ void affiche_tableau(ARBRE *tab_arbres){
     }
 
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
+    printf("Nombre d'arbres lus: %d\n", nb_arbres);
 }
 
 /*Procédure qui recherche un arbre dans le tableau*/
@@ -254,9 +256,9 @@ void tri(ARBRE *tab_arbres){
 
 
 /* Inverse de la fonction remplacer_virgule pour l'écriture dans le fichier csv(respect du format)*/
-void flottant_chaine(float valeur, char *chaine) {
+void flottant_chaine(float valeur, char *chaine){
     sprintf(chaine,"%.2f", valeur);
-    for (int i = 0; chaine[i]; i++) {
+    for (int i = 0; chaine[i]; i++){
         if (chaine[i] == '.') {
             chaine[i] = ',';
         }
@@ -268,59 +270,60 @@ void flottant_chaine(float valeur, char *chaine) {
 void ajouter_arbre(ARBRE **tab_arbres, ARBRE *arbre, int *nb_arbres){
     ARBRE *temp = realloc(*tab_arbres, (*nb_arbres + 1) * sizeof(ARBRE));
     ARBRE *p = NULL;
-    if (temp != NULL) {
+    if (temp != NULL){
         *tab_arbres = temp;
         (*tab_arbres)[*nb_arbres]= *arbre; // Ajouter le nouvel arbre à la fin du tableau
         (*nb_arbres)++; // Incrémenter le nombre d'arbres
-    } else {
+    }else{
         printf("Erreur de réallocation de mémoire.\n");
     }
 }
 
 /*Fonction qui vérifie si le nombre est un entier supérieur à 0*/
-int lire_entier(const char *prompt) {
+int lire_entier(const char *prompt){
     char chaine[32];
     int value, stop = 1;
-    while (stop) {
+    while (stop){//Boucle jusqu'à ce que l'utilisateur entre une valeur valide
         printf("%s", prompt);
-        if (fgets(chaine, sizeof(chaine), stdin) != NULL) {
-            // Supprimer le saut de ligne éventuel
-            chaine[strcspn(chaine, "\n")] = '\0';
+        if (fgets(chaine, sizeof(chaine), stdin) != NULL){
+           
+            chaine[strcspn(chaine, "\n")] = '\0';// Supprimer le \n sinon problème à l'affichage
             // Tenter de convertir en entier
-            if (sscanf(chaine, "%d", &value) == 1) {
+            if (sscanf(chaine, "%d", &value) == 1){
                 if (value > 0) {
                     return value; // Conversion réussie et valeur positive
                 }
             } 
             printf("Entrée invalide. Veuillez entrer un entier valide.\n");
             
-        } else {
+        }else{
+            /*Gestion de l'erreur si la saisie n'est pas faite*/
             printf("Erreur de lecture. Veuillez réessayer.\n");
         }
     }
 }
 
 /*Fonction qui vérifie que le nombre saisie est un flottant supérieur à 0*/
-float lire_flottant(const char *prompt) {
+float lire_flottant(const char *prompt){
     char chaine[32];
     int  stop = 1;
     float value;
-    while (stop) {
+    while (stop){//Boucle jusqu'à ce que l'utilisateur entre une valeur valide
         printf("%s", prompt);
-        if (fgets(chaine, sizeof(chaine), stdin) != NULL) {
-            // Supprimer le saut de ligne éventuel
-            chaine[strcspn(chaine, "\n")] = '\0';
-            // Tenter de convertir en flottant
-            if (sscanf(chaine, "%f", &value) == 1) {
-                if (value > 0) {
-                    return value; // Conversion réussie et valeur positive
+        if (fgets(chaine, sizeof(chaine), stdin) != NULL){
+
+            chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le \n sinon problème à l'affichage
+
+            if (sscanf(chaine, "%f", &value) == 1){//On vérifie que la chaine contient bien un flottant
+                if (value > 0) {//On vérifie aussi que le flottant est bien supérieur à 0
+                    return value; 
                 }
             } 
             printf("Entrée invalide. Veuillez entrer un flottant valide.\n");
             
-        } else {
+        }else{
+            /*Gestion de l'erreur si la saisie n'est pas faite*/
             printf("Erreur de lecture. Veuillez réessayer.\n");
-            stop = 0;
         }
     }
 }
@@ -328,26 +331,30 @@ float lire_flottant(const char *prompt) {
 
 /*Procédure qui permet à l'utilisateur d'écrire dans le fichier csv*/
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE **tab_arbres){
-    FILE *fichier = NULL;
-    ARBRE arbre;
-    char hauteur_str[32], volume_str[32],diametre_str[32], chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
-    int i, compteur = nb_arbres + 1;
-    fichier = fopen(nom_fichier, "a+");
+    FILE *fichier = NULL;// pointeur de fichier
+    ARBRE arbre;// déclaration d'une variable de type ARBRE pour stocker les données saisies pour chaque arbre
+    char hauteur_str[32], volume_str[32],diametre_str[32], chaine[TAILLE_MAX];//chaine pour stocker l'arbre formaté en chaîne de caractère et trois chaînes pour stocker les trois attributs flottants
+    int i, compteur = nb_arbres + 1;// compteur pour l'identifiant des arbres à saisir
+    fichier = fopen(nom_fichier, "a+");//a+ pour ajouter à la fin du fichier sans écraser les données existantes, sert aussi à lire le fichier
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
-            snprintf(arbre.identifiant,sizeof(arbre.identifiant),"AR%03d",compteur); //auto intcrémentation de l'id de l'arbre
+            /*Saisie des attributs  de l'arbre*/
+            snprintf(arbre.identifiant,sizeof(arbre.identifiant),"AR%03d",compteur); //auto intcrémentation de l'id de l'arbre, snprintf permet de formater l'identifiant avec la forme ARXXX du fichier csv 
             printf("Rentrez son espèce :");
             fgets(arbre.espece, sizeof(arbre.espece), stdin);
             arbre.espece[0] = toupper(arbre.espece[0]);
-            arbre.espece[strcspn(arbre.espece, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
+            arbre.espece[strcspn(arbre.espece, "\n")] = '\0'; // Supprimer le \n sinon problème à l'affichage, strcspn renvoie l'index du premier caractère trouvé dans la chaîne (ici le \n)
+            /*Fonctions de vérification qui affecte une valeur correcte à l'attribut correspondant de l'arbre*/
             arbre.age = lire_entier("Rentrez son âge :");
             arbre.hauteur = lire_flottant("Rentrez sa hauteur :");
             arbre.diametre = lire_flottant("Rentrez son diamètre :");
             arbre.volume = lire_flottant("Rentrez son volume :");
             arbre.sante = lire_entier("Rentrez son indice de sante sur 10 :");
+            /*Transformer les flottants en chaîne pour mettre les virgules comme dans le fichier csv*/
             flottant_chaine(arbre.hauteur, hauteur_str);
             flottant_chaine(arbre.volume, volume_str);
             flottant_chaine(arbre.diametre, diametre_str);
+            /*Arbre placé dans une chaîne de caractère*/
             sprintf(chaine,"\n%s;%s;%d;%s;%s;%s;%d;",
                 arbre.identifiant,
                 arbre.espece,
@@ -357,12 +364,14 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE **tab_arbres){
                 volume_str,
                 arbre.sante
             );
+            /*Ecriture de l'arbre dans le fichier*/
             fprintf(fichier, "%s", chaine);
-            ajouter_arbre(tab_arbres, &arbre, &nb_arbres);
-            compteur++;
+            ajouter_arbre(tab_arbres, &arbre, &nb_arbres);//Ajout de l'arbre dans le tableau dynamique
+            compteur++;// Incrémentation du compteur pour l'identifiant à chaque nouvel arbre
         }
         fclose(fichier);  
     }else{
+        /*Gestion de l'erreur si le fichier n'est pas ouvrable*/
         exit(EXIT_FAILURE);
     }
 
@@ -370,55 +379,54 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE **tab_arbres){
 
 /*Fonction principale*/
 int main(){
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
+    SetConsoleOutputCP(CP_UTF8);//Permet l'affichage des caractères spéciaux
+    SetConsoleCP(CP_UTF8);//Permet la saisie des caractères spéciaux
     const char *nom_fichier = "foret_arbres_50_V1.csv";
     int stop = 1, saisie_arbres;
-    ARBRE *tab_arbres = NULL;
-    char reponse[20] = "", cherche_espece[20] = "", demarrage[20]="";
-    compte_arbres(nom_fichier, &nb_arbres);
+    ARBRE *tab_arbres = NULL;// déclaration du tableau dynamique d'arbres qu'on utilise pour charger les données du fichier csv
+    char  cherche_espece[20] = "", demarrage[20]="";
+    compte_arbres(nom_fichier, &nb_arbres);//Procédure qui compte le nombre d'arbres dans le fichier
     tab_arbres = malloc(nb_arbres * sizeof (ARBRE)); // allocation  de mémoire pour le tableau des arbres
-    lirecharger_fichier(nom_fichier, &tab_arbres);
-    printf("Nombre d'arbres lus: %d\n", nb_arbres);
+    lirecharger_fichier(nom_fichier, &tab_arbres);//Procédure qui lit et charge les arbres du fichier dans le tableau dynamique
     if (nb_arbres != 0){
 
         printf("Les données du tableau sont :\n");
-        affiche_tableau(tab_arbres);
+        affiche_tableau(tab_arbres);//Affichage du tableau des arbres
 
-        while (stop){
+        while (stop){//Boucle principale du programme
             printf("\nQue voulez vous faire ?(Afficher/Saisir/Rechercher/Trier/Rien) :");
-            scanf("%10s",demarrage);
-            nettoyer();
-            demarrage[0] = toupper(demarrage[0]);
+            fgets(demarrage, sizeof(demarrage), stdin);
+            demarrage[strcspn(demarrage, "\n")] = '\0'; // Supprimer le \n sinon problème à l'affichage
+            demarrage[0] = toupper(demarrage[0]);// Mettre la première lettre en majuscule si minuscule sinon strcmp ne retourne pas 0
+            /* Comparaison de la saisie et des différentes options*/
             if (strcmp(demarrage, "Saisir") == 0){
-                printf("\nCombien d'arbres souhaitez-vous saisir ? :");
-                scanf("%d", &saisie_arbres);
-                nettoyer();
-                ecrire_fichier(nom_fichier, saisie_arbres, &tab_arbres);
+                saisie_arbres = lire_entier("Combien d'arbres souhaitez-vous saisir ? :");//Fonction qui vérifie que la saisie est un bien entier ET qu'il est supérieur à 0
+                ecrire_fichier(nom_fichier, saisie_arbres, &tab_arbres);//Fonction qui permet d'écrire dans le fichier csv et de rajouter les arbres dans le tableau dynamique
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
-                scanf("%s", cherche_espece);
-                nettoyer();
-                recherche(tab_arbres,cherche_espece);
+                fgets(cherche_espece, sizeof(cherche_espece), stdin);
+                cherche_espece[strcspn(cherche_espece, "\n")] = '\0'; // Supprimer le \n sinon problème à l'affichage
+                recherche(tab_arbres,cherche_espece);//Procédure qui recherche une espèce dans le tableau dynamique et affiche tous les arbres correspondants
                 
             }else if (strcmp(demarrage, "Trier") == 0){
-                tri(tab_arbres);
+                tri(tab_arbres);//Procédure qui trie le tableau dynamique selon l'age ou la sante et affiche une copie du tableau trié
             }else if (strcmp(demarrage, "Rien") == 0){
                 printf("Aurevoir !\n");
-                stop = 0;
+                stop = 0;// Arrête la boucle principale donc l'utilisateur quitte le programme
             }else if(strcmp(demarrage, "Afficher") == 0){
-                affiche_tableau(tab_arbres);
+                affiche_tableau(tab_arbres);//Procédure qui affiche les données du  tableau dynamique donc le fichier csv
             }else{
-                printf("Ce n'est pas possible.\n");
+                printf("Ce n'est pas possible.\n");// Message d'erreur si la saisie ne correspond à aucune option
             }
         }
     }else{
+        /*Si la procédure compte_arbre n'en compte aucun*/
         printf("Les données du tableau sont :");
         printf("Il n'y a pas de données disponibles.\n");
     }
     
-    free(tab_arbres); // libération de la mémoire allouée pour les arbres
+    free(tab_arbres); // libération de la mémoire allouée au tableau dynamique
     return 0;
     
 }
