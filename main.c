@@ -267,10 +267,11 @@ void flottant_chaine(float valeur, char *chaine) {
 /*Fonction qui rajoute un arbre dans le tableau*/
 void ajouter_arbre(ARBRE **tab_arbres, ARBRE *arbre, int *nb_arbres){
     ARBRE *temp = realloc(*tab_arbres, (*nb_arbres + 1) * sizeof(ARBRE));
+    ARBRE *p = NULL;
     if (temp != NULL) {
         *tab_arbres = temp;
-        *tab_arbres[*nb_arbres - 1] = *arbre; // Copier l'arbre dans la nouvelle position
-        *nb_arbres++; // Incrémenter le nombre d'arbres
+        (*tab_arbres)[*nb_arbres]= *arbre; // Ajouter le nouvel arbre à la fin du tableau
+        (*nb_arbres)++; // Incrémenter le nombre d'arbres
     } else {
         printf("Erreur de réallocation de mémoire.\n");
     }
@@ -300,7 +301,7 @@ int lire_entier(const char *prompt) {
 }
 
 /*Fonction qui vérifie que le nombre saisie est un flottant supérieur à 0*/
-int lire_flottant(const char *prompt) {
+float lire_flottant(const char *prompt) {
     char chaine[32];
     int  stop = 1;
     float value;
@@ -309,23 +310,24 @@ int lire_flottant(const char *prompt) {
         if (fgets(chaine, sizeof(chaine), stdin) != NULL) {
             // Supprimer le saut de ligne éventuel
             chaine[strcspn(chaine, "\n")] = '\0';
-            // Tenter de convertir en entier
+            // Tenter de convertir en flottant
             if (sscanf(chaine, "%f", &value) == 1) {
                 if (value > 0) {
                     return value; // Conversion réussie et valeur positive
                 }
             } 
-            printf("Entrée invalide. Veuillez entrer un entier valide.\n");
+            printf("Entrée invalide. Veuillez entrer un flottant valide.\n");
             
         } else {
             printf("Erreur de lecture. Veuillez réessayer.\n");
+            stop = 0;
         }
     }
 }
 
 
 /*Procédure qui permet à l'utilisateur d'écrire dans le fichier csv*/
-void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
+void ecrire_fichier(const char *nom_fichier, int nba, ARBRE **tab_arbres){
     FILE *fichier = NULL;
     ARBRE arbre;
     char hauteur_str[32], volume_str[32],diametre_str[32], chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
@@ -346,7 +348,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
             flottant_chaine(arbre.hauteur, hauteur_str);
             flottant_chaine(arbre.volume, volume_str);
             flottant_chaine(arbre.diametre, diametre_str);
-            sprintf(chaine,"\n%s;%s;%d;%s;%s;%s;%d",
+            sprintf(chaine,"\n%s;%s;%d;%s;%s;%s;%d;",
                 arbre.identifiant,
                 arbre.espece,
                 arbre.age,
@@ -356,7 +358,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
                 arbre.sante
             );
             fprintf(fichier, "%s", chaine);
-            ajouter_arbre(&tab_arbres, &arbre, &nb_arbres);
+            ajouter_arbre(tab_arbres, &arbre, &nb_arbres);
             compteur++;
         }
         fclose(fichier);  
@@ -392,7 +394,7 @@ int main(){
                 printf("\nCombien d'arbres souhaitez-vous saisir ? :");
                 scanf("%d", &saisie_arbres);
                 nettoyer();
-                ecrire_fichier(nom_fichier, saisie_arbres, tab_arbres);
+                ecrire_fichier(nom_fichier, saisie_arbres, &tab_arbres);
 
             }else if (strcmp(demarrage, "Rechercher") == 0){
                 printf("\n Quelle espece d'arbre souhaitez vous rechercher ? :");
