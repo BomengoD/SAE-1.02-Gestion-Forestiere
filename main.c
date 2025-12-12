@@ -258,7 +258,58 @@ void tri(ARBRE *tab_arbres){
     free(tab_res);
 }
 
+void ajouter_arbre(ARBRE **tab_arbres, int nv_arbres, const char *nom_fichier){
+    FILE* fichier = NULL;// pointeur de fichier
+    char chaine[TAILLE_MAX];//tableau de caractères pour stocker chaque ligne lue
+    int i = 0;
+    *tab_arbres = realloc(*tab_arbres, (nb_arbres + nv_arbres) * sizeof(ARBRE));
+    fichier = fopen(nom_fichier, "r"); //a+ pour plus tard
+    ARBRE* p = NULL; // pointeur vers une structure ARBRE
+    if(fichier != NULL){
 
+        fgets(chaine, sizeof(chaine), fichier); // lire et ignorer à nouveau la première ligne (en-tête)
+
+        while (fgets(chaine, sizeof(chaine), fichier) != NULL){
+
+            p = &((*tab_arbres)[i]); // pointeur vers l'arbre courant dans le tableau
+
+            char *champ = strtok(chaine, ";"); // découpage de la ligne en champs(token) par le séparateur ";" via strtok
+            int champ_num = 1; // compteur de champs
+
+            while ( champ_num < 8){// boucle pour afficher chaque champ(progression sur la ligne) tant qu'il y a des champs et que le nombre de champs est inférieur à 7(qui est le nombre d'attributs d'un arbre donc le nombre de colonnnes dans le fichier csv)
+
+                      if (champ_num == 1) {
+                        strcpy(p->identifiant, champ); // copier l'identifiant dans la structure ARBRE via strcpy
+                    } else if (champ_num == 2) {
+                        strcpy(p->espece, champ); // copier l'espèce dans la structure ARBRE
+                    } else if (champ_num == 3) {
+                        p->age = atoi(champ); // convertir et stocker l'âge dans la structure ARBRE via atoi
+                    } else if (champ_num == 4) {
+                        remplacer_virgule(champ);//On change la virgule du nombre flottant par un point 
+                        p->hauteur = atof(champ); // convertir et stocker la hauteur dans la structure ARBRE via atof
+                    } else if (champ_num == 5) {
+                        remplacer_virgule(champ);
+                        p->diametre = atof(champ); // convertir et stocker le diamètre dans la structure ARBRE
+                    } else if (champ_num == 6) {
+                        remplacer_virgule(champ);
+                        p->volume = atof(champ); // convertir et stocker le volume dans la structure ARBRE
+                    } else if (champ_num == 7) {
+                        p->sante = atoi(champ); // convertir et stocker la santé dans la structure ARBRE
+                    }
+
+                champ = strtok(NULL, ";");// obtenir le champ suivant, NULL indique de continuer à partir de la position actuelle
+                champ_num++;// incrémenter le compteur de champs   
+            
+            }
+            i++; // incrémenter l'index du tableau des arbres
+        }
+
+        fclose(fichier); // fermer le fichier après la lecture
+
+    }else{
+        exit(EXIT_FAILURE);
+    }
+}
 
 /*Procédure qui permet à l'utilisateur d'écrire dans le fichier csv*/
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
@@ -269,6 +320,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
     fichier = fopen(nom_fichier, "a+");
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
+
             printf("\nRentrez son identifiant :");
             fgets(chaine, sizeof(chaine), stdin);
             chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
