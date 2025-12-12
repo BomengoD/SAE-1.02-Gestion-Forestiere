@@ -43,7 +43,13 @@ void remplacer_virgule(char *s){
         }
     }
 }
-
+void remplacer_point(char *s){
+    for (int i = 0; s[i]; i++){
+        if (s[i] == '.'){
+            s[i] = ',';
+        }
+    }
+}
 /*Deuxième problème, après avoir trouver comment afficher et rentrer des caractères spéciaux, la console les affichaient rétrécis, avec de la marge*/
 /*Procédure qui corrige la largeur des caractères spéciaux*/
 int largeur_visible_utf8(const char *s) {
@@ -253,35 +259,6 @@ void tri(ARBRE *tab_arbres){
 }
 
 
-/*
-void auto_id(ARBRE *arbre, int compteur){
-    *arbre.identifiant = "AR" + str(compteur);
-}
-*/
-int verif_age(int nb){
-    if (nb < 0){
-        return 0;
-    }
-    return 1;
-}
-int verif_sante(int nb){
-    if (nb < 0 || nb > 10){
-        return 0;
-    }
-    return 1;
-}
-
-int verif_float(float nb){
-    if (nb <= 0){
-        return 0;
-    }
-    return 1;
-}
-
-int verif_espece(FILE *flux){
-    
-}
-
 
 /*Procédure qui permet à l'utilisateur d'écrire dans le fichier csv*/
 void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
@@ -292,7 +269,6 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
     fichier = fopen(nom_fichier, "a+");
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
-            /*auto_id(&arbre, compteur);*/
             printf("\nRentrez son identifiant :");
             fgets(chaine, sizeof(chaine), stdin);
             chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le saut de ligne éventuel
@@ -336,7 +312,8 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE *tab_arbres){
                 printf("L'entrée n'est pas valide, veuillez entrez un entier correct.\n");
             }
 
-            fprintf(fichier,"\n%s;%s;%d;%.2f;%.2f;%.2f;%d",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
+            sprintf(chaine,"\n%s;%s;%d;%.2f;%.2f;%.2f;%d",arbre.identifiant,arbre.espece,arbre.age,arbre.hauteur,arbre.diametre,arbre.volume,arbre.sante);
+            fprintf(fichier, "%s", chaine);
             compteur++;
         }
         fclose(fichier);  
