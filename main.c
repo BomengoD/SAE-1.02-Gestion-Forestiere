@@ -301,6 +301,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE **tab_arbres){
     fichier = fopen(nom_fichier, "a+");//a+ pour ajouter à la fin du fichier sans écraser les données existantes, sert aussi à lire le fichier
     if (fichier != NULL){
         for (i = 0; i < nba; i++){
+            printf("\n---Saisie de l'arbre %d---\n", i + 1);
             /*Saisie des attributs  de l'arbre*/
             snprintf(arbre.identifiant,sizeof(arbre.identifiant),"AR%03d",compteur); //auto intcrémentation de l'id de l'arbre, snprintf permet de formater l'identifiant avec la forme ARXXX du fichier csv 
             printf("Rentrez son espèce :");
