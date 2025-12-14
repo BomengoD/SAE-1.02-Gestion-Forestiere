@@ -245,16 +245,16 @@ void ajouter_arbre(ARBRE **tab_arbres, ARBRE *arbre, int *nb_arbres){
 /*Fonction qui vérifie si le nombre est un entier supérieur à 0*/
 int lire_entier(const char *prompt){
     char chaine[32];
-    int value, stop = 1;
+    int valeur, stop = 1;
     while (stop){//Boucle jusqu'à ce que l'utilisateur entre une valeur valide
         printf("%s", prompt);
         if (fgets(chaine, sizeof(chaine), stdin) != NULL){
            
             chaine[strcspn(chaine, "\n")] = '\0';// Supprimer le \n sinon problème à l'affichage
-            // Tenter de convertir en entier
-            if (sscanf(chaine, "%d", &value) == 1){
-                if (value > 0) {
-                    return value; // Conversion réussie et valeur positive
+            
+            if (sscanf(chaine, "%d", &valeur) == 1){//On vérifie que la chaine contient bien un entier
+                if (valeur > 0) {
+                    return valeur;//On vérifie aussi que l'entier est bien supérieur à 0
                 }
             } 
             printf("Entrée invalide. Veuillez entrer un entier valide.\n");
@@ -270,16 +270,16 @@ int lire_entier(const char *prompt){
 float lire_flottant(const char *prompt){
     char chaine[32];
     int  stop = 1;
-    float value;
+    float valeur;
     while (stop){//Boucle jusqu'à ce que l'utilisateur entre une valeur valide
         printf("%s", prompt);
         if (fgets(chaine, sizeof(chaine), stdin) != NULL){
 
             chaine[strcspn(chaine, "\n")] = '\0'; // Supprimer le \n sinon problème à l'affichage
 
-            if (sscanf(chaine, "%f", &value) == 1){//On vérifie que la chaine contient bien un flottant
-                if (value > 0) {//On vérifie aussi que le flottant est bien supérieur à 0
-                    return value; 
+            if (sscanf(chaine, "%f", &valeur) == 1){//On vérifie que la chaine contient bien un flottant
+                if (valeur > 0) {//On vérifie aussi que le flottant est bien supérieur à 0
+                    return valeur; 
                 }
             } 
             printf("Entrée invalide. Veuillez entrer un flottant valide.\n");
