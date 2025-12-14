@@ -120,6 +120,7 @@ void lirecharger_fichier(const char *nom_fichier, ARBRE **tab_arbres){//On point
 }
 
 
+
 /*Procédure qui affiche les données d'un tableau d'arbres*/
 void affiche_tableau(ARBRE *tab_arbres){
     int i;
