@@ -19,7 +19,8 @@ Soit CINQ/SIX fonctions minimum
 #define TAILLE_MAX 100
 // Variable globale qui compte le nombre d'arbres dans le fichier
 int nb_arbres = 0;
-/*Déclaration du type de données utilisé pour l'enregistrment des arbes : structure, avec un tableau dynamique d'éléments ARBRE(déclaré dans la fonction principale)*/
+/*Déclaration du type de données utilisé pour l'enregistrment des arbres : structure,
+avec un tableau dynamique d'éléments ARBRE(déclaré dans la fonction principale)*/
 typedef struct{
     char identifiant[6], espece[20];
     int age, sante;
@@ -37,11 +38,7 @@ void nettoyer(){
 donc on a crée une fonction qui remplace la virgule du nombre flottant que contient le champ par un point.
 Procédure qui remplace les virgules des nombres flottants dans le fichier csv par des points*/
 void remplacer_virgule(char *s){
-    for (int i = 0; s[i]; i++){
-        if (s[i] == ','){
-            s[i] = '.';
-        }
-    }
+     s[strcspn(s, ",")] = '.';
 }
 
 /*Procédure qui parcourt le fichier afin de compter le nombre d'arbres*/
@@ -228,11 +225,7 @@ void tri(ARBRE *tab_arbres){
 /* Inverse de la fonction remplacer_virgule pour l'écriture dans le fichier csv(respect du format)*/
 void flottant_chaine(float valeur, char *chaine){
     sprintf(chaine,"%.2f", valeur);
-    for (int i = 0; chaine[i]; i++){
-        if (chaine[i] == '.') {
-            chaine[i] = ',';
-        }
-    }
+    chaine[strcspn(chaine, ".")] = ',';
 }
 
 
