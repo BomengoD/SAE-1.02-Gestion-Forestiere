@@ -154,7 +154,7 @@ void recherche(ARBRE *tab_arbres, char *espece){
     espece[0] = toupper(espece[0]);
     for (int i = 0 ; i < nb_arbres;i++){
         if (strcmp(tab_arbres[i].espece, espece) == 0){
-            printf("| %-6s | %-20s | %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
+            printf("| %-6s | %-20s  | %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
             tab_arbres[i].identifiant,
             tab_arbres[i].espece,
             tab_arbres[i].age,
