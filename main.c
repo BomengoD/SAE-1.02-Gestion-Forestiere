@@ -43,33 +43,6 @@ void remplacer_virgule(char *s){
         }
     }
 }
-/*Deuxième problème, après avoir trouver comment afficher et rentrer des caractères spéciaux, la console les affichaient rétrécis, avec de la marge*/
-/*Procédure qui corrige la largeur des caractères spéciaux*/
-int largeur_visible_utf8(const char *s){
-    int largeur = 0;// largeur visible en nombre de caractères
-    unsigned char c;//unsigned char pour gérer les caractères spéciaux
-    while ((c = (unsigned char)*s++)){// parcours de la chaîne octet par octet
-        if (c < 128){// caractère ASCII
-            largeur++;// un octet = un caractère donc normal 
-        } else if ((c >> 5) == 0x6){//On vérifie si les 3 premiers bits sont 110
-            s++; largeur++;   // caractère codé sur 2 octets donc on saute un octet
-        } else if ((c >> 4) == 0xE){//On vérifie si les 4 premiers bits sont 1110
-            s+=2; largeur++;  // caractère codé sur 3 octets donc on saute deux octets
-        } else if ((c >> 3) == 0x1E){//On vérifie si les 5 premiers bits sont 11110
-            s+=3; largeur++;  // caractère codé sur  4 octets donc on saute trois octets
-        }
-    }
-    return largeur;
-}
-
-/*Procédure qui soigne l'affichage*/
-void print_col_utf8(const char *txt, int taille){
-    int visible = largeur_visible_utf8(txt);// largeur visible du texte
-    printf("%s", txt);
-    for (int i = 0; i < taille - visible; i++){// ajoute des espaces pour atteindre la taille désirée, 6 - 3 = 3 espaces
-        printf(" ");
-    }
-}
 
 /*Procédure qui parcourt le fichier afin de compter le nombre d'arbres*/
 void compte_arbres(const char *nom_fichier, int *nb_arbres){
@@ -155,11 +128,9 @@ void affiche_tableau(ARBRE *tab_arbres){
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
 
     for (i = 0; i < nb_arbres; i++){
-        printf("| ");
-        print_col_utf8(tab_arbres[i].identifiant, 6);
-        printf(" | ");
-        print_col_utf8(tab_arbres[i].espece, 20);
-        printf(" | %-3d | %-6.2f | %-7.2f | %-8.2f | %-d       |\n",//- Permet d'aligner à gauche
+        printf("| %-6s | %-20s | %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
+            tab_arbres[i].identifiant,
+            tab_arbres[i].espece,
             tab_arbres[i].age,
             tab_arbres[i].hauteur,
             tab_arbres[i].diametre,
@@ -183,17 +154,15 @@ void recherche(ARBRE *tab_arbres, char *espece){
     espece[0] = toupper(espece[0]);
     for (int i = 0 ; i < nb_arbres;i++){
         if (strcmp(tab_arbres[i].espece, espece) == 0){
-            printf("| ");
-            print_col_utf8(tab_arbres[i].identifiant, 6);
-            printf(" | ");
-            print_col_utf8(tab_arbres[i].espece, 20);
-            printf(" | %-3d | %-6.2f | %-7.2f | %-8.2f | %-d       |\n",//- Permet d'aligner à gauche
+            printf("| %-6s | %-20s | %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
+            tab_arbres[i].identifiant,
+            tab_arbres[i].espece,
             tab_arbres[i].age,
             tab_arbres[i].hauteur,
             tab_arbres[i].diametre,
             tab_arbres[i].volume,
             tab_arbres[i].sante
-             );
+            );
             count++;
         }
 
