@@ -124,9 +124,15 @@ void affiche_tableau(ARBRE *tab_arbres){
     printf("+--------+----------------------+-----+--------+---------+----------+---------+\n");
 
     for (i = 0; i < nb_arbres; i++){
-        printf("| %-6s | %-20s | %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
-            tab_arbres[i].identifiant,
-            tab_arbres[i].espece,
+        printf("| ");
+        printf("%-6s", tab_arbres[i].identifiant); //- Permet d'aligner à gauche
+        printf(" | ");
+        printf("%-20s", tab_arbres[i].espece);
+        if (strpbrk(tab_arbres[i].espece, "éèê") != NULL){//Vérification si le nom de l'espèce contient un caractère spécial avec strpbrk qui renvoie NULL si aucun des caractères n'est trouvéR
+            printf(" ");// Ajout d'un espace si l'espèce est plus courte que 20 caractères pour l'alignement
+        }
+        printf(" |");
+        printf(" %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",
             tab_arbres[i].age,
             tab_arbres[i].hauteur,
             tab_arbres[i].diametre,
@@ -150,9 +156,16 @@ void recherche(ARBRE *tab_arbres, char *espece){
     espece[0] = toupper(espece[0]);
     for (int i = 0 ; i < nb_arbres;i++){
         if (strcmp(tab_arbres[i].espece, espece) == 0){
-            printf("| %-6s | %-20s  | %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
-            tab_arbres[i].identifiant,
-            tab_arbres[i].espece,
+            printf("| ");
+            printf("%-6s", tab_arbres[i].identifiant); //- Permet d'aligner à gauche
+            printf(" | ");
+            printf("%-20s", tab_arbres[i].espece);
+            if (strpbrk(tab_arbres[i].espece, "éèê") != NULL){//Vérification si le nom de l'espèce contient un caractère spécial
+                printf(" ");// Ajout d'un espace si l'espèce est plus courte que 20 caractères pour l'alignement
+            }
+            printf(" |");
+
+            printf(" %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",//- Permet d'aligner à gauche
             tab_arbres[i].age,
             tab_arbres[i].hauteur,
             tab_arbres[i].diametre,
