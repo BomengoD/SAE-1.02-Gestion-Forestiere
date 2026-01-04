@@ -27,13 +27,7 @@ typedef struct{
     float hauteur, diametre, volume;
 }ARBRE;
 
-/*Procédure qui vide les entrées*/
-void nettoyer(){
-    int c;
-    while ((c = getchar())!= '\n' && c!= EOF){
-        // Ignorer les caractères restants
-    }
-}
+
 /*Lors des essais, un problème a été rencontré, les nombres flottants étaient mal chargés à cause de la virgule 
 donc on a crée une fonction qui remplace la virgule du nombre flottant que contient le champ par un point.
 Procédure qui remplace les virgules des nombres flottants dans le fichier csv par des points*/
@@ -57,6 +51,8 @@ void compte_arbres(const char *nom_fichier, int *nb_arbres){
                 (*nb_arbres)++; // incrémenter le compteur d'arbres pour chaque ligne lue
             }
     }else{
+        /*Gestion de l'erreur d'ouverture du fichier, perror permet d'afficher le message d'erreur*/
+        perror("Erreur avec compte_arbres lors de l'ouverture du fichier.");
         exit(EXIT_FAILURE);
     }
     fclose(fichier); // fermer le fichier après la lecture
@@ -112,6 +108,8 @@ void lirecharger_fichier(const char *nom_fichier, ARBRE **tab_arbres){//On point
         fclose(fichier); // fermer le fichier après la lecture
 
     }else{
+        /*Gestion de l'erreur d'ouverture du fichier*/
+        perror("Erreur avec lirecharger_fichier lors de l'ouverture du fichier.");
         exit(EXIT_FAILURE);
     }
 }
@@ -336,6 +334,7 @@ void ecrire_fichier(const char *nom_fichier, int nba, ARBRE **tab_arbres){
         fclose(fichier);  
     }else{
         /*Gestion de l'erreur si le fichier n'est pas ouvrable*/
+        perror("Erreur avec ecrire_fichier lors de l'ouverture du fichier.");
         exit(EXIT_FAILURE);
     }
 
