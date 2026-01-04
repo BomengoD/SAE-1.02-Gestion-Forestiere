@@ -7,7 +7,7 @@
 #include <Windows.h>
 
 /*Code principale de l'application, elle doit être capable de:
-Lire le fichier csv et afficher l'ensembe de ses données de manière visible
+Lire le fichier csv et afficher l'ensemble de ses données de manière visible
 Charger les données du fichier csv dans une structure adaptée
 Rechercher les arbres d'une même espèce et afficher les données correspondantes
 Trier les données selon deux critères différents: par age et par note de santé via deux méthodes de tri différentes
