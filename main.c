@@ -129,7 +129,7 @@ void affiche_tableau(ARBRE *tab_arbres){
         printf(" | ");
         printf("%-20s", tab_arbres[i].espece);
         if (strpbrk(tab_arbres[i].espece, "éèê") != NULL){//Vérification si le nom de l'espèce contient un caractère spécial avec strpbrk qui renvoie NULL si aucun des caractères n'est trouvéR
-            printf(" ");// Ajout d'un espace si l'espèce est plus courte que 20 caractères pour l'alignement
+            printf(" ");// Ajout d'un espace si l'espèce contient un caractère spécial, pour l'alignement
         }
         printf(" |");
         printf(" %-3d | %-6.2f | %-7.2f | %-8.2f | %-1d       |\n",
@@ -161,7 +161,7 @@ void recherche(ARBRE *tab_arbres, char *espece){
             printf(" | ");
             printf("%-20s", tab_arbres[i].espece);
             if (strpbrk(tab_arbres[i].espece, "éèê") != NULL){//Vérification si le nom de l'espèce contient un caractère spécial
-                printf(" ");// Ajout d'un espace si l'espèce est plus courte que 20 caractères pour l'alignement
+                printf(" ");// Ajout d'un espace si l'espèce contient un caractère spécial, pour l'alignement
             }
             printf(" |");
 
