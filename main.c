@@ -196,7 +196,7 @@ void tri(ARBRE *tab_arbres){
     
     printf("Voulez-vous trier par âge ou par santé ?(âge/santé) :");
     scanf("%s", choix); 
-    
+    while(getchar() != '\n'); // vider le buffer d'entrée pour éviter des problèmes de saisie plus tard
     if (strcmp(choix, "âge") == 0){ // tri par selection si on choisit age
         for(int i = 0; i < nb_arbres - 1; i++){//-1 car dernier élément toujours à la bonne place dans un tri selection
             posMin = i;
