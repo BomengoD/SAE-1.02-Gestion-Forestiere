@@ -193,10 +193,11 @@ void tri(ARBRE *tab_arbres){
     for(int i = 0; i < nb_arbres; i++){
         tab_res[i] = tab_arbres[i]; // copie tab_arbres dans tab_res pour garder tab_arbres en original
     }
-    
-    printf("Voulez-vous trier par âge ou par santé ?(âge/santé) :");
-    scanf("%s", choix); 
-    while(getchar() != '\n'); // vider le buffer d'entrée pour éviter des problèmes de saisie plus tard
+    do{
+        printf("Voulez-vous trier par âge ou par santé ?(âge/santé) :");
+        scanf("%s", choix); 
+        while(getchar() != '\n'); // vider le buffer d'entrée pour éviter des problèmes de saisie plus tard
+    }while(strcmp(choix, "âge") != 0 && strcmp(choix, "santé") != 0);
     if (strcmp(choix, "âge") == 0){ // tri par selection si on choisit age
         for(int i = 0; i < nb_arbres - 1; i++){//-1 car dernier élément toujours à la bonne place dans un tri selection
             posMin = i;
