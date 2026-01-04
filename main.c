@@ -198,7 +198,7 @@ void tri(ARBRE *tab_arbres){
     scanf("%s", choix); 
     
     if (strcmp(choix, "âge") == 0){ // tri par selection si on choisit age
-        for(int i = 0; i < nb_arbres - 1; i++){//-1 et non -2 !
+        for(int i = 0; i < nb_arbres - 1; i++){//-1 car dernier élément toujours à la bonne place dans un tri selection
             posMin = i;
             for(int j = i + 1; j < nb_arbres; j++){
                 if(tab_res[j].age < tab_res[posMin].age){
